@@ -1,11 +1,24 @@
-const http = require('http');
+// Create web server
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello, world!');
+var express = require('express');
+var router = express.Router();
+var db = require('../models/db');
+
+// Get all comments
+router.get('/', function(req, res) {
+    db.Comment.findAll().then(function(comments) {
+        res.json(comments);
+    });
 });
 
-server.listen(3000, 'localhost', () => {
-    console.log('Server running at http://localhost:3000/');
+// Get a comment
+router.get('/:id', function(req, res) {
+    db.Comment.find({
+        where: {
+            id: req.params.id
+        }
+    }).then(function(comment) {
+        res.json(comment);
+    });
 });
+
